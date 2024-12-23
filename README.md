@@ -87,7 +87,10 @@ Este projeto é uma aplicação web que permite consultar informações de apól
 3. O script imprimirá o token de acesso no console.
 
 ## Estrutura de Pastas
-`/<seu_diretorio_desenvolvimento_aqui>/app-seguro-py/
+## Estrutura de Pastas
+
+```plaintext
+/<seu_diretorio_desenvolvimento_aqui>/app-seguro-py/
 │
 ├── ApiGetApolice.py
 ├── ApiGetAviso.py
@@ -96,7 +99,8 @@ Este projeto é uma aplicação web que permite consultar informações de apól
 ├── aviso.html
 ├── index.html
 ├── server.py
-└── style.css`
+└── style.css
+```
 
 ## Contribuição
 
