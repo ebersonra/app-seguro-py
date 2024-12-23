@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execute Python Script</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ball"></div>
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/aviso">Aviso</a>
+        <a href="/apolice">Apolice</a>
+    </div>
+    <div class="container">
+        <h1>Gerar Access Token</h1>
+        <button id="executeButton">Gerar</button>
+        <div id="loadingContainer" style="display: none;">
+            <div id="loadingBar">
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+                <div class="cube"></div>
+            </div>
+        </div>
+        <div id="outputContainer"></div>
+        <pre id="output" style="display: none;"></pre>
+    </div>
+
+    <script>
+        document.getElementById('executeButton').addEventListener('click', function() {
+            const loadingContainer = document.getElementById('loadingContainer');
+            const loadingBar = document.getElementById('loadingBar');
+            const cubes = document.querySelectorAll('.cube');
+            loadingContainer.style.display = 'block'; // Show loading bar
+            loadingBar.style.width = '0'; // Reset loading bar
+
+            // Reset cubes
+            cubes.forEach(cube => {
+                cube.classList.remove('explode', 'float');
+                cube.style.transform = 'translateY(0) scale(1)';
+                cube.style.opacity = '1';
+            });
+
+            // Start loading animation
+            setTimeout(() => {
+                loadingBar.style.width = '70%';
+            }, 10);
+
+            // Explode the cubes when the bar reaches 70%
+            setTimeout(() => {
+                cubes.forEach(cube => {
+                    cube.classList.add('explode');
+                });
+            }, 1400); // Adjust this timing to match the transition duration
+
+            // Make the cubes float after exploding
+            setTimeout(() => {
+                cubes.forEach(cube => {
+                    cube.classList.add('float');
+                });
+            }, 1900); // Adjust this timing to match the explode animation duration
+
+            fetch('/execute-script')
+                .then(response => response.json())
+                .then(data => {
+                    loadingContainer.style.display = 'none'; // Hide loading bar
+
+                    const outputContainer = document.getElementById('outputContainer');
+                    outputContainer.innerHTML = ''; // Clear previous content
+                    document.getElementById('output').style.display = 'none'; // Hide the <pre> tag
+
+                    const stdout = data.stdout;
+                    const jsonStartIndex = stdout.indexOf('{');
+                    const jsonEndIndex = stdout.lastIndexOf('}') + 1;
+                    const jsonString = stdout.substring(jsonStartIndex, jsonEndIndex);
+                    const jsonData = JSON.parse(jsonString);
+
+                    const fields = ['field1', 'field2', 'field3', 'field4'];
+                    fields.forEach(field => {
+                        if (jsonData.hasOwnProperty(field)) {
+                            const label = document.createElement('label');
+                            label.textContent = field;
+                            label.style.textAlign = 'left'; // Align label to the left
+
+                            let input;
+                            if (field === 'scope') {
+                                input = document.createElement('textarea');
+                                input.rows = 4;
+                            } else {
+                                input = document.createElement('input');
+                            }
+                            input.value = jsonData[field];
+                            input.readOnly = true;
+
+                            const div = document.createElement('div');
+                            div.appendChild(label);
+                            div.appendChild(input);
+                            outputContainer.appendChild(div);
+                        }
+                    });
+                })
+                .catch(error => {
+                    loadingContainer.style.display = 'none'; // Hide loading bar
+                    document.getElementById('output').textContent = 'Error: ' + error;
+                    document.getElementById('output').style.display = 'block'; // Show the <pre> tag
+                });
+        });
+    </script>
+</body>
+</html>
