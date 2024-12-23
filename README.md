@@ -133,4 +133,4 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para ma
 3. Acesse a Página:
     - Abra o navegador e vá para `http://127.0.0.1:5000`.
 
-Isso deve garantir que a página `index.html` funcione corretamente, permitindo que o usuário insira os dados necessários para consultar o aviso ou apólice. Deve ser exibido o resultado com os dados ou uma mensagen de erro conforme o retorno.
+Isso deve garantir que a página `index.html` funcione corretamente, permitindo que o usuário insira os dados necessários para consultar o aviso ou apólice. Após a consulta, o resultado será exibido com os dados em seus respectivos campos. Caso falhe a chamada para api, uma mensagem de erro deve ser exibida conforme o retorno.
